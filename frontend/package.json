@@ -1,0 +1,24 @@
+{
+	"name": "front-template",
+	"version": "1.0.0",
+	"private": true,
+	"description": "pnpm + Turborepo monorepo with Vue, React, Solid",
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev",
+		"lint": "biome check .",
+		"lint:fix": "biome check . --write",
+		"format": "biome format --write .",
+		"check-types": "turbo run check-types"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.12",
+		"@types/node": "22.15.29",
+		"turbo": "2.7.5",
+		"typescript": "5.9.3"
+	},
+	"packageManager": "pnpm@10.11.1",
+	"engines": {
+		"node": ">=18"
+	}
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@repo/api-client",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API types generated from OpenAPI contract for frontend",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "generate": "openapi-typescript ../../../api-contract/openapi.yaml -o src/generated/types.d.ts"
+  },
+  "devDependencies": {
+    "@repo/config-typescript": "workspace:*",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "5.9.3"
+  }
+}

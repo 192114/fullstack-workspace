@@ -1,0 +1,26 @@
+---
+description: 工作空间开发宗旨与子项目规则入口
+alwaysApply: true
+---
+
+# 工作空间开发宗旨
+
+## 接口驱动的同步开发
+
+- **Contract 优先**：前端 api-contract 先定义，后端按 Contract 实现
+- **统一响应**：{ code, message, data }，code 0 成功
+- **跨端一致**：backend、frontend、native 共享同一套约定
+
+## 子项目与规则
+
+| 子项目 | 路径 | 规则入口 |
+|--------|------|----------|
+| backend | backend/ | project-overview.mdc |
+| frontend | frontend/ | api-response.mdc, http-client.mdc |
+| native | native/ | flutter-mvvm-conventions.mdc |
+
+## 新增 API 流程
+
+1. 在 api-contract/openapi.yaml 定义 Request/Response
+2. 后端按 Contract 生成 DTO/Vo
+3. Controller 返回 Result<T>

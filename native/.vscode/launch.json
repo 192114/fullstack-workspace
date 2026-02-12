@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "开发环境",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=dev"
+        //"--dart-define=BASE_URL=https://localhost:8899"
+      ]
+    },
+    {
+      "name": "Mock 环境",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=mock"
+      ]
+    },
+    {
+      "name": "生产环境",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=prod"
+        //"--dart-define=BASE_URL=https://api.example.com"
+      ]
+    }
+  ]
+}

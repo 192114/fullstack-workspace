@@ -1,0 +1,28 @@
+{
+	"name": "web-vue",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check-types": "vue-tsc --noEmit"
+	},
+	"dependencies": {
+		"@repo/api-client": "workspace:*",
+		"@repo/http-client": "workspace:*",
+		"@repo/ui-vue": "workspace:*",
+		"vue": "3.5.25"
+	},
+	"devDependencies": {
+		"@repo/config-tailwind": "workspace:*",
+		"@repo/config-typescript": "workspace:*",
+		"@tailwindcss/vite": "4.1.18",
+		"@vitejs/plugin-vue": "5.2.1",
+		"tailwindcss": "4.1.18",
+		"typescript": "5.9.3",
+		"vite": "7.3.1",
+		"vue-tsc": "2.2.0"
+	}
+}

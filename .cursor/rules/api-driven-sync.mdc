@@ -1,0 +1,24 @@
+---
+description: 接口驱动同步开发 - Contract 优先与统一响应格式
+globs: "**/api-contract/**","**/controller/**","**/api/**"
+alwaysApply: false
+---
+
+# 接口驱动同步开发
+
+## Contract 优先
+
+- 定义位置：`api-contract/openapi.yaml`（OpenAPI 规范，工作空间根）
+- 实现前必须先定义 Contract，后端 DTO/Vo 以 Contract 为准
+
+## 统一响应格式
+
+- 成功：`{ code: 0, message, data }`
+- 校验错误：`{ code: 1000, message, data: ValidationError[] }`
+- 业务错误：`{ code: 非0, message, data: null }`
+
+## 子项目规则引用
+
+- backend：result-return-standards，api-controller-standards
+- frontend：api-response.mdc，http-client.mdc（类型自 @repo/api-client）
+- native：flutter-mvvm-conventions.mdc

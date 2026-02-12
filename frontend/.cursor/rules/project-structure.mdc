@@ -1,0 +1,52 @@
+---
+description: 目录结构、文件职责与命名规范
+alwaysApply: true
+---
+
+# 项目结构与命名规范
+
+## src/ 目录结构（各 app）
+
+```
+src/
+├── features/           # 按业务域划分的功能模块
+│   └── {domain}/       # 如 users、auth、dashboard
+│       ├── *.page.tsx  # 或 *.page.vue 页面入口
+│       └── *-*.tsx     # 该 feature 内的业务组件
+├── components/         # 纯 UI 组件（无业务逻辑）
+├── layouts/            # 布局组件（header、sidebar、main-layout 等）
+├── routes/             # 路由配置与定义
+├── services/           # 业务逻辑层（可调用 api）
+├── api/                # API 请求实现（唯一允许发起 HTTP 的入口，类型从 @repo/api-client 引用）
+├── store/              # 全局状态管理
+├── hooks/              # 自定义 hooks
+├── utils/              # 工具函数
+├── types/              # 全局类型定义
+└── constants/          # 常量
+```
+
+## 职责划分
+
+| 目录 | 职责 | 示例 |
+|------|------|------|
+| features/* | 页面 + 该业务域内的业务组件 | `user-list.page.tsx`, `user-table.tsx` |
+| components/ | 纯 UI，可跨 feature 复用 | `button.tsx`, `modal.tsx`, `data-table.tsx` |
+| layouts/ | 页面布局脚手架 | `main-layout.tsx`, `auth-layout.tsx` |
+| routes/ | 路由配置 | `index.ts`, `routes.config.ts` |
+| services/ | 业务逻辑、组合 api 调用 | `user.service.ts` |
+| api/ | HTTP 请求，使用 httpClient，类型从 @repo/api-client | `user.api.ts` |
+| store/ | 全局状态 | `user.store.ts` |
+| hooks/ | 自定义 hooks | `use-user-list.ts` |
+| utils/ | 工具函数 | `format.util.ts` |
+| constants/ | 常量 | `route.constants.ts` |
+| types/ | 全局类型 | `user.types.ts` |
+
+## 命名规范
+
+- **hooks**: `use-*.ts`
+- **utils**: `*.util.ts` 或 `*.utils.ts`
+- **constants**: `*.constants.ts`
+- **types**: `*.types.ts` 或 `*.d.ts`
+- **contract**: `*.contract.ts`
+- **service**: `*.service.ts`
+- **api**: `*.api.ts`

@@ -1,0 +1,42 @@
+---
+description: API 请求必须使用 http-client，禁止 raw fetch
+globs: "**/api/**", "**/http-client.ts"
+alwaysApply: false
+---
+
+# HTTP Client 请求规范
+
+## 约束
+
+- API 请求必须使用 `@repo/http-client` 创建的实例，**禁止**在 api 层使用 raw fetch 或 axios
+- 各 app 在 `src/http-client.ts` 中 `createHttpClient(config)` 并导出
+- **硬性规则**：`api/*.api.ts` 是唯一允许调用 `httpClient` 的位置
+- features、services、components、hooks 等**禁止**直接使用 httpClient、axios 或 fetch，必须通过 `api/` 导出的函数发起请求
+
+## 方法
+
+使用 `httpClient.get/post/put/patch/delete`，返回值已是解包后的 `data`（无需手动判断 code）。
+
+## 错误处理
+
+- 业务错误通过 `ApiError` 抛出（`@repo/http-client` 已处理 ApiResult）
+- `code === 1000` 时 `ApiError.data` 为 `ValidationError[]`
+
+## FormData
+
+FormData 上传时直接传 FormData，http-client 自动设置 `multipart/form-data`。
+
+## 示例
+
+```typescript
+// api/user.api.ts
+import { UserContract } from "@repo/api-client";
+import { httpClient } from "../http-client";
+
+export const userApi = {
+  list: (params: UserContract.ListRequest) =>
+    httpClient.get<UserContract.ListResponse>(UserContract.list.path, params),
+  create: (data: UserContract.CreateRequest) =>
+    httpClient.post<UserContract.CreateResponse>(UserContract.create.path, data),
+};
+```

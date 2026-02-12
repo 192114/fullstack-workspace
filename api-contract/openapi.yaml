@@ -1,0 +1,304 @@
+openapi: 3.0.3
+info:
+  title: Fullstack Workspace API
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: API base path
+
+paths:
+  /users:
+    get:
+      summary: 用户列表
+      operationId: listUsers
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: pageSize
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResult"
+                example:
+                  code: 0
+                  message: 成功
+                  data:
+                    list: []
+                    total: 0
+    post:
+      summary: 创建用户
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultUser"
+
+  /upload:
+    post:
+      summary: 文件上传
+      operationId: upload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultUpload"
+
+  /auth/email:
+    post:
+      summary: 发送邮件验证码
+      operationId: sendEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendEmail"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /auth/register:
+    post:
+      summary: 用户注册
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegister"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /auth/login:
+    post:
+      summary: 用户登录
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultToken"
+
+  /auth/refresh:
+    post:
+      summary: 刷新 Token
+      operationId: refresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultToken"
+
+  /auth/logout:
+    post:
+      summary: 用户登出
+      operationId: logout
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+components:
+  schemas:
+    ApiResult:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          description: "0 成功, 1000 参数校验错误"
+        message:
+          type: string
+        data:
+          type: object
+
+    ApiResultVoid:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              type: "null"
+
+    ApiResultUser:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/User"
+
+    ApiResultUserList:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/UserListResponse"
+
+    ApiResultUpload:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/UploadResponse"
+
+    ApiResultToken:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/TokenResponse"
+
+    ValidationError:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+
+    UserListResponse:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        total:
+          type: integer
+
+    UploadResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    SendEmail:
+      type: object
+      required:
+        - email
+        - usage
+      properties:
+        email:
+          type: string
+          format: email
+        usage:
+          type: string
+
+    UserRegister:
+      type: object
+      required:
+        - email
+        - password
+        - emailCode
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        emailCode:
+          type: string
+
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        loginType:
+          type: string
+        emailCode:
+          type: string
+
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string

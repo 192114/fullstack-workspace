@@ -1,0 +1,11 @@
+{
+  "folders": [
+    { "path": "api-contract" },
+    { "path": "frontend" },
+    { "path": "native" },
+    { "path": "backend" }
+  ],
+  "settings": {
+    "java.compile.nullAnalysis.mode": "automatic"
+  }
+}

@@ -1,0 +1,61 @@
+---
+description: 所有接口必须从 api 文件夹走，禁止直接使用 axios/fetch
+globs: "**/features/**", "**/services/**", "**/components/**", "**/hooks/**"
+alwaysApply: false
+---
+
+# API 调用约束
+
+## 硬性规则
+
+所有 HTTP 请求必须通过 `api/` 目录发起，**禁止**在以下位置直接使用：
+
+- `axios`
+- `fetch`
+- `httpClient`（仅允许在 `api/*.api.ts` 中使用）
+
+## 受约束目录
+
+- `features/*`：页面和业务组件
+- `services/*`：业务逻辑层
+- `components/*`：UI 组件
+- `hooks/*`：自定义 hooks
+
+## 正确用法
+
+```typescript
+// features/users/user-list.page.tsx
+import { userApi } from "@/api/user.api";
+
+export function UserListPage() {
+  const { data } = useQuery(() => userApi.list({ page: 1, pageSize: 10 }));
+  // ...
+}
+```
+
+```typescript
+// services/user.service.ts
+import { userApi } from "@/api/user.api";
+
+export const userService = {
+  async fetchAndTransform() {
+    const res = await userApi.list({ page: 1, pageSize: 10 });
+    return res.list.map(/* ... */);
+  },
+};
+```
+
+## 禁止用法
+
+```typescript
+// ❌ features 中直接使用
+import { httpClient } from "@/http-client";
+const data = await httpClient.get("/api/users");
+
+// ❌ 使用 axios
+import axios from "axios";
+const res = await axios.get("/api/users");
+
+// ❌ 使用 fetch
+const res = await fetch("/api/users");
+```

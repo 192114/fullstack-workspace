@@ -1,0 +1,141 @@
+---
+description: Flutter MVVM 项目规范（文件结构、命名、API 响应格式、必备规则）
+alwaysApply: true
+---
+
+# Flutter MVVM 项目规范
+
+## 1. 文件结构（Feature-First）
+
+```
+lib/
+├── app/                    # 应用配置
+│   ├── app.dart            # 应用主组件
+│   └── router.dart         # 路由配置
+├── core/                   # 核心模块
+│   ├── config/             # 环境配置（Mock/Dev/Prod）
+│   ├── network/            # 网络层（ApiResponse、Dio、异常、Mock 助手）
+│   ├── provider/           # 全局 Provider
+│   ├── storage/            # 本地存储
+│   ├── theme/              # 主题
+│   └── utils/              # 工具类
+├── features/{feature_name}/ # 功能模块
+│   ├── models/             # Freezed 数据模型
+│   ├── repositories/       # 接口、Impl、Mock
+│   ├── datasources/        # 可选，远程/本地数据源
+│   ├── view/               # 页面 Widget
+│   └── view_model/         # Riverpod Provider / Notifier
+└── main.dart
+```
+
+**分层数据流**: View → ViewModel → Repository → DataSource → Model
+
+## 2. 命名规范
+
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| 文件 | snake_case | `auth_model.dart`, `login_page.dart`, `user_repository_impl.dart` |
+| 类/Widget | PascalCase | `LoginPage`, `AuthRepository`, `UserModel` |
+| 变量/方法 | camelCase | `accessToken`, `getUsers()` |
+| Provider | 后缀 `Provider` | `dioProvider`, `loginNotifierProvider` |
+| Repository | 接口 `XxxRepository`，实现 `XxxRepositoryImpl` / `XxxRepositoryMock` | `AuthRepository`, `AuthRepositoryImpl` |
+
+## 3. API 统一响应格式
+
+**成功响应**（code: 0）：
+
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0ZW1wbGF0ZS1hcGkiLCJzdWIiOiIyMDE5Njc3MzE3NDc1NDY3MjY2IiwiaWF0IjoxNzcwMzYzNzE3LCJleHAiOjE3NzAzNjczMTd9.RR_MVIqf6_auRn8Ra7Gtg_0tDCy4n5xepXQKRliAZmA"
+  }
+}
+```
+
+**异常响应**（code: 非 0）：
+
+```json
+{
+  "code": 2005,
+  "message": "邮箱或密码错误",
+  "data": null
+}
+```
+
+**判断规则**: `code == 0` 表示成功，非 0 表示业务错误，需在 Dio 拦截器中转为 `AppException` 抛出。
+
+若 `ApiResponse.isSuccess` 或 `ResponseInterceptor` 当前使用 `code == 200`，应改为 `code == 0` 以匹配后端。
+
+## 4. 必备规则
+
+### Model
+
+- 使用 Freezed + JsonSerializable
+- 生成 `*.freezed.dart` 和 `*.g.dart`
+- 修改后执行: `flutter pub run build_runner build --delete-conflicting-outputs`
+
+```dart
+// 正确
+@freezed
+class UserModel with _$UserModel {
+  const factory UserModel({required String id, required String name}) = _UserModel;
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+}
+```
+
+### 依赖注入
+
+- 使用 Riverpod Provider
+- Repository 根据 `EnvConfig.isMock` 选择 Mock 或 Impl
+
+```dart
+// 正确
+final authRepositoryProvider = Provider((ref) {
+  if (EnvConfig.isMock) return const AuthRepositoryMock();
+  return AuthRepositoryImpl(ref.watch(dioProvider));
+});
+```
+
+### 异常处理
+
+- 统一使用 `AppException` 及其子类
+- Dio 拦截器将业务错误（code != 0）转为 `AppException(message, code)`
+
+### 导入
+
+- 使用 `package:flutter_mvvm_template/...`，禁止 `../` 相对路径
+
+```dart
+// 正确
+import 'package:flutter_mvvm_template/features/auth/models/auth_model.dart';
+
+// 错误
+import '../models/auth_model.dart';
+```
+
+### Repository 接口
+
+- 抽象类定义接口，`Impl` 调用真实 API，`Mock` 使用 `MockResponseHelper`
+
+```dart
+// 正确
+abstract class XxxRepository {
+  Future<T> getData();
+}
+class XxxRepositoryImpl implements XxxRepository { ... }
+class XxxRepositoryMock implements XxxRepository { ... }
+```
+
+### Mock 数据
+
+- 成功: `MockResponseHelper.success(data: ..., delayMs: 500)`
+- 错误: `MockResponseHelper.error(message: ..., code: 400)`
+
+## 5. 添加新功能模块示例
+
+1. 在 `lib/features/` 下创建 `{feature_name}/`
+2. 按 `models/`、`repositories/`、`view/`、`view_model/` 组织
+3. 在 `app/router.dart` 注册路由
+4. Repository Provider 中根据环境返回 Mock 或 Impl

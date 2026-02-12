@@ -1,0 +1,24 @@
+{
+	"name": "@repo/ui-react",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Shared React UI components",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"import": "./src/index.ts",
+			"default": "./src/index.ts"
+		},
+		"./package.json": "./package.json"
+	},
+	"peerDependencies": {
+		"react": ">=18"
+	},
+	"devDependencies": {
+		"@repo/config-typescript": "workspace:*",
+		"@types/react": "19.0.6",
+		"react": "19.2.0",
+		"typescript": "5.9.3"
+	}
+}

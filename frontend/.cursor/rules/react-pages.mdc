@@ -1,0 +1,40 @@
+---
+description: React 页面与组件约定
+globs: apps/web-react/**/*.tsx
+alwaysApply: false
+---
+
+# React 页面与组件约定
+
+## 页面文件
+
+- 页面入口使用 `*.page.tsx` 后缀
+- 位于 `features/{domain}/` 下，按业务域组织
+
+```tsx
+// features/users/user-list.page.tsx
+export function UserListPage() {
+  return (
+    <div>
+      <UserFilter />
+      <UserTable />
+    </div>
+  );
+}
+```
+
+## 业务组件
+
+- 与页面同目录，如 `user-table.tsx`、`user-form.tsx`
+- 包含业务逻辑，仅被当前 feature 内页面使用
+
+## 纯 UI 组件
+
+- 放在 `components/`，无业务逻辑
+- 可被多个 feature 复用
+- 公共 UI 优先使用 `@repo/ui-react`
+
+## 约定
+
+- 使用函数组件
+- 合理拆分，避免单文件过大

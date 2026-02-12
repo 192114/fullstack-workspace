@@ -1,0 +1,52 @@
+---
+description: API 响应 wrapper、错误码与校验错误格式
+globs: "**/api/**"
+alwaysApply: false
+---
+
+# API 响应结构
+
+## 统一 wrapper
+
+所有 API 返回格式：`{ code, message, data }`
+
+## 成功响应（code: 0）
+
+```json
+{ "code": 0, "message": "成功", "data": null }
+```
+
+或 `data` 为业务数据（对象/数组）。
+
+## 错误响应（code !== 0）
+
+**参数/校验错误（code: 1000）**：
+
+```json
+{
+  "code": 1000,
+  "message": "参数错误",
+  "data": [
+    { "field": "email", "message": "邮箱不能为空" },
+    { "field": "password", "message": "密码至少8位..." }
+  ]
+}
+```
+
+**其他业务错误**：`data` 可为单位对象或 `null`。
+
+## 错误码约定
+
+| code | 含义 |
+|------|------|
+| 0 | 成功 |
+| 1000 | 参数/校验错误 |
+
+## 前端调用
+
+- 先判断 `code`，再使用 `data`
+- 建议在 `api/` 层统一解析，`code !== 0` 时抛错或返回 `{ ok: false, errors }`，`code === 0` 时返回 `data`
+
+## 表单校验错误
+
+当 `code === 1000` 时，`data` 为 `ValidationError[]`，按 `field` 与表单字段对应，展示在表单项下方。

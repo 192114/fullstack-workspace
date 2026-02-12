@@ -1,0 +1,42 @@
+# analysis_options.yaml
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  plugins:
+    - custom_lint
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+
+linter:
+  rules:
+    # === 基础性能优化 ===
+    - prefer_const_constructors # 能 const 就 const -> 减少 rebuild
+    - prefer_const_literals_to_create_immutables # list/map const 化
+    - avoid_unnecessary_containers # 减少无意义层级
+
+    # === 代码一致性 & 可读性 ===
+    - prefer_single_quotes # 全部使用单引号统一风格
+    - always_use_package_imports # 避免 ../ 导致循环依赖
+    - directives_ordering # import 顺序统一
+    - sort_child_properties_last # Flutter widget builder 可读性
+
+    # === 安全性 & 可靠性 ===
+    - avoid_print # 禁止 print（使用 debugPrint 或 log）
+    - cancel_subscriptions # 防内存泄漏（Stream 订阅记得取消）
+    - close_sinks # 修复资源泄漏（StreamController/IOSink）
+
+    # === 结构化 & 组件规范 ===
+    - use_key_in_widget_constructors # Widget 可重建性
+    - require_trailing_commas # 自动格式化友好，减少 diff 噪音
+    - use_super_parameters # Dart3 推荐写法，简化构造函数
+
+    # === 代码质量提升 ===
+    - avoid_empty_else # 避免误解 else {}
+    - unnecessary_await_in_return # 异步简化
+    - unnecessary_parenthesis # 统一书写规范
+    - prefer_final_locals # 变量尽量 final，提高可维护性
+
+    # === 避免隐藏 bug ===
+    - avoid_returning_null_for_void # void 函数禁止 return null
+    - only_throw_errors # 只能 throw Error/Exception，避免 throw 非异常值
