@@ -23,12 +23,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   @Autowired
   private UserSessionMapper userSessionMapper;
 
-  private UserSessionEntity getUserSessionEntityByRfreshToken(String refreshToken, String deviceId) {
-    final String refreshtokenHash = DigestUtils.sha256Hex(refreshToken);
+  private UserSessionEntity getUserSessionEntityByRefreshToken(String refreshToken, String deviceId) {
+    final String refreshTokenHash = DigestUtils.sha256Hex(refreshToken);
     LambdaQueryWrapper<UserSessionEntity> qw = Wrappers.lambdaQuery();
-    UserSessionEntity userSessionEntity = userSessionMapper
-        .selectOne(
-            qw.eq(UserSessionEntity::getTokenHash, refreshtokenHash).eq(UserSessionEntity::getDeviceId, deviceId));
+    qw.eq(UserSessionEntity::getTokenHash, refreshTokenHash);
+    if (org.springframework.util.StringUtils.hasText(deviceId)) {
+      qw.eq(UserSessionEntity::getDeviceId, deviceId);
+    }
+    UserSessionEntity userSessionEntity = userSessionMapper.selectOne(qw);
 
     if (userSessionEntity == null) {
       throw new BizException(ResultCode.TOKEN_INVALID);
@@ -47,7 +49,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public Long verifyAndGetUserId(String refreshToken, String deviceId) {
-    final UserSessionEntity userSessionEntity = getUserSessionEntityByRfreshToken(refreshToken, deviceId);
+    final UserSessionEntity userSessionEntity = getUserSessionEntityByRefreshToken(refreshToken, deviceId);
 
     final LocalDateTime expireTime = userSessionEntity.getExpireTime();
     final boolean revoked = userSessionEntity.getRevoked();
@@ -66,7 +68,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public String rotateRefreshToken(RefreshTokenRequestCommand refreshTokenRequestCommand) {
-    final UserSessionEntity userSessionEntity = getUserSessionEntityByRfreshToken(refreshTokenRequestCommand.getRefreshToken(), refreshTokenRequestCommand.getDeviceId());
+    final UserSessionEntity userSessionEntity = getUserSessionEntityByRefreshToken(refreshTokenRequestCommand.getRefreshToken(), refreshTokenRequestCommand.getDeviceId());
 
     final LocalDateTime expireTime = userSessionEntity.getExpireTime();
     final Long parentId = userSessionEntity.getId();
@@ -105,7 +107,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public void revoke(String refreshToken, String deviceId) {
-    UserSessionEntity userSessionEntity = getUserSessionEntityByRfreshToken(refreshToken, deviceId);
+    UserSessionEntity userSessionEntity = getUserSessionEntityByRefreshToken(refreshToken, deviceId);
 
     userSessionEntity.setRevoked(true);
     userSessionEntity.setRevokedTime(LocalDateTime.now());
@@ -136,6 +138,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     userSessionEntity.setRevoked(false);
     userSessionEntity.setParentId(createSessionCommand.getParentId());
     userSessionEntity.setDeviceId(createSessionCommand.getDeviceId());
+    userSessionEntity.setClientType(createSessionCommand.getClientType());
     userSessionEntity.setUserAgent(createSessionCommand.getUseragent());
     userSessionEntity.setIpAddress(createSessionCommand.getIpAddress());
 

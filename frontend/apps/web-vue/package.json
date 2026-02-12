@@ -19,7 +19,7 @@
 		"@repo/config-tailwind": "workspace:*",
 		"@repo/config-typescript": "workspace:*",
 		"@tailwindcss/vite": "4.1.18",
-		"@vitejs/plugin-vue": "5.2.1",
+		"@vitejs/plugin-vue": "6.0.4",
 		"tailwindcss": "4.1.18",
 		"typescript": "5.9.3",
 		"vite": "7.3.1",

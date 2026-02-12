@@ -27,6 +27,8 @@ public class UserSessionEntity {
   private Long parentId;
   @TableField(value = "device_id")
   private String deviceId;
+  @TableField(value = "client_type")
+  private String clientType;
   @TableField(value = "user_agent")
   private String userAgent;
   @TableField(value = "ip_address")

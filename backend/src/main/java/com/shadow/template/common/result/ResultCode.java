@@ -24,7 +24,8 @@ public enum ResultCode {
   FAILED_PASSWORD_LOGIN(2005, "邮箱或密码错误"),
   FAILED_EMAILCODE_LOGIN(2006, "邮箱或验证码错误"),
   LOGIN_TYPE_ERROR(2007, "登录类型错误"),
-  USER_DISABLED(2008, "用户已禁用");
+  USER_DISABLED(2008, "用户已禁用"),
+  PASSWORD_INCORRECT(2009, "旧密码错误");
 
   private final int code;
   private final String message;

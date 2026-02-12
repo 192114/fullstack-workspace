@@ -11,4 +11,5 @@ public class UserLoginCommand {
   private String ipAddress;
   private String useragent;
   private String deviceId;
+  private String clientType;
 }

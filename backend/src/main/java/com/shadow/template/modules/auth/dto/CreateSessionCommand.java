@@ -13,4 +13,5 @@ public class CreateSessionCommand {
   private String ipAddress;
   private String useragent;
   private String deviceId;
+  private String clientType;
 }

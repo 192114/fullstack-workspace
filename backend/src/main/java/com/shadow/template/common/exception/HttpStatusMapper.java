@@ -28,6 +28,7 @@ public final class HttpStatusMapper {
       case FAILED_EMAILCODE_LOGIN -> HttpStatus.BAD_REQUEST;
       case LOGIN_TYPE_ERROR -> HttpStatus.BAD_REQUEST;
       case USER_DISABLED -> HttpStatus.FORBIDDEN;
+      case PASSWORD_INCORRECT -> HttpStatus.BAD_REQUEST;
     };
   }
 }

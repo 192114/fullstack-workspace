@@ -124,6 +124,254 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 修改密码 */
+        post: operations["changePassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 忘记密码-发送验证码 */
+        post: operations["forgotPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 忘记密码-重置 */
+        post: operations["resetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 当前用户信息 */
+        get: operations["getMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin 当前用户+菜单+权限 */
+        get: operations["getAdminMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 角色列表 */
+        get: operations["listRoles"];
+        put?: never;
+        /** 创建角色 */
+        post: operations["createRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/roles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 角色详情 */
+        get: operations["getRole"];
+        /** 更新角色 */
+        put: operations["updateRole"];
+        post?: never;
+        /** 删除角色 */
+        delete: operations["deleteRole"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/roles/{id}/permissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 角色权限列表 */
+        get: operations["getRolePermissions"];
+        /** 分配角色权限 */
+        put: operations["assignRolePermissions"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/permissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 权限树 */
+        get: operations["getPermissionTree"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/menus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 菜单树（管理用） */
+        get: operations["getMenuTree"];
+        put?: never;
+        /** 创建菜单 */
+        post: operations["createMenu"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/menus/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** 更新菜单 */
+        put: operations["updateMenu"];
+        post?: never;
+        /** 删除菜单 */
+        delete: operations["deleteMenu"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 用户列表 */
+        get: operations["listAdminUsers"];
+        put?: never;
+        /** 创建用户 */
+        post: operations["createAdminUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 用户详情 */
+        get: operations["getAdminUser"];
+        /** 更新用户 */
+        put: operations["updateAdminUser"];
+        post?: never;
+        /** 删除用户 */
+        delete: operations["deleteAdminUser"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/users/{id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 用户角色列表 */
+        get: operations["getUserRoles"];
+        /** 分配用户角色 */
+        put: operations["assignUserRoles"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -135,7 +383,7 @@ export interface components {
             data?: Record<string, never>;
         };
         ApiResultVoid: components["schemas"]["ApiResult"] & {
-            data?: null;
+            data?: Record<string, never> | null;
         };
         ApiResultUser: components["schemas"]["ApiResult"] & {
             data?: components["schemas"]["User"];
@@ -169,7 +417,186 @@ export interface components {
             url?: string;
         };
         TokenResponse: {
-            token?: string;
+            accessToken?: string;
+            refreshToken?: string;
+        };
+        LogoutRequest: {
+            refreshToken?: string;
+            deviceId?: string;
+        };
+        ChangePasswordRequest: {
+            oldPassword?: string;
+            emailCode?: string;
+            newPassword: string;
+        };
+        ForgotPasswordRequest: {
+            /** Format: email */
+            email: string;
+        };
+        ResetPasswordRequest: {
+            /** Format: email */
+            email: string;
+            emailCode: string;
+            newPassword: string;
+        };
+        UserMe: {
+            id?: number;
+            email?: string;
+            nickname?: string;
+            avatarUrl?: string;
+            gender?: number;
+            /** Format: date */
+            birthday?: string;
+            bio?: string;
+        };
+        AdminMe: {
+            user?: components["schemas"]["AdminUserVo"];
+            menus?: components["schemas"]["MenuTreeItem"][];
+            permissions?: string[];
+        };
+        AdminUserVo: {
+            id?: number;
+            email?: string;
+            nickname?: string;
+            avatarUrl?: string;
+        };
+        MenuTreeItem: {
+            id?: number;
+            name?: string;
+            path?: string;
+            component?: string;
+            icon?: string;
+            children?: components["schemas"]["MenuTreeItem"][];
+        };
+        RoleListResponse: {
+            list?: components["schemas"]["RoleListItem"][];
+            total?: number;
+        };
+        RoleListItem: {
+            id?: number;
+            code?: string;
+            name?: string;
+            description?: string;
+            type?: number;
+            status?: number;
+            /** Format: date-time */
+            createTime?: string;
+        };
+        RoleDetail: {
+            id?: number;
+            code?: string;
+            name?: string;
+            description?: string;
+            type?: number;
+            status?: number;
+            /** Format: date-time */
+            createTime?: string;
+            /** Format: date-time */
+            updateTime?: string;
+        };
+        RoleCreate: {
+            code: string;
+            name: string;
+            description?: string;
+            type: number;
+            status?: number;
+        };
+        RoleUpdate: {
+            name?: string;
+            description?: string;
+            status?: number;
+        };
+        RolePermissionIds: {
+            permissionIds: number[];
+        };
+        PermissionTreeItem: {
+            id?: number;
+            code?: string;
+            name?: string;
+            type?: number;
+            parentId?: number;
+            sortOrder?: number;
+            children?: components["schemas"]["PermissionTreeItem"][];
+        };
+        MenuManagementTreeItem: {
+            id?: number;
+            permissionId?: number;
+            parentId?: number;
+            name?: string;
+            path?: string;
+            component?: string;
+            icon?: string;
+            sortOrder?: number;
+            visible?: number;
+            children?: components["schemas"]["MenuManagementTreeItem"][];
+        };
+        MenuCreate: {
+            permissionId: number;
+            parentId: number;
+            name: string;
+            path?: string;
+            component?: string;
+            icon?: string;
+            sortOrder?: number;
+            visible?: number;
+        };
+        MenuUpdate: {
+            permissionId?: number;
+            parentId?: number;
+            name?: string;
+            path?: string;
+            component?: string;
+            icon?: string;
+            sortOrder?: number;
+            visible?: number;
+        };
+        AdminUserListResponse: {
+            list?: components["schemas"]["AdminUserListItem"][];
+            total?: number;
+        };
+        AdminUserListItem: {
+            id?: number;
+            email?: string;
+            nickname?: string;
+            avatarUrl?: string;
+            status?: number;
+            /** Format: date-time */
+            createTime?: string;
+        };
+        AdminUserDetail: {
+            id?: number;
+            email?: string;
+            nickname?: string;
+            avatarUrl?: string;
+            gender?: number;
+            birthday?: string;
+            bio?: string;
+            status?: number;
+            /** Format: date-time */
+            createTime?: string;
+            /** Format: date-time */
+            updateTime?: string;
+        };
+        AdminUserCreate: {
+            /** Format: email */
+            email: string;
+            password: string;
+            nickname?: string;
+            status?: number;
+        };
+        AdminUserUpdate: {
+            nickname?: string;
+            avatarUrl?: string;
+            gender?: number;
+            birthday?: string;
+            bio?: string;
+            status?: number;
+        };
+        UserRoleIds: {
+            roleIds: number[];
+        };
+        IdResponse: {
+            id?: number;
         };
         SendEmail: {
             /** Format: email */
@@ -191,6 +618,37 @@ export interface components {
         };
         RefreshTokenRequest: {
             refreshToken?: string;
+            deviceId?: string;
+        };
+        ApiResultUserMe: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["UserMe"];
+        };
+        ApiResultAdminMe: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["AdminMe"];
+        };
+        ApiResultRoleList: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["RoleListResponse"];
+        };
+        ApiResultRoleDetail: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["RoleDetail"];
+        };
+        ApiResultId: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["IdResponse"];
+        };
+        ApiResultLongArray: components["schemas"]["ApiResult"] & {
+            data?: number[];
+        };
+        ApiResultPermissionTree: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["PermissionTreeItem"][];
+        };
+        ApiResultMenuTree: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["MenuManagementTreeItem"][];
+        };
+        ApiResultAdminUserList: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["AdminUserListResponse"];
+        };
+        ApiResultAdminUserDetail: components["schemas"]["ApiResult"] & {
+            data?: components["schemas"]["AdminUserDetail"];
         };
     };
     responses: never;
@@ -378,7 +836,568 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["LogoutRequest"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    changePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    forgotPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    getMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultUserMe"];
+                };
+            };
+        };
+    };
+    getAdminMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultAdminMe"];
+                };
+            };
+        };
+    };
+    listRoles: {
+        parameters: {
+            query: {
+                page: number;
+                pageSize: number;
+                keyword?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultRoleList"];
+                };
+            };
+        };
+    };
+    createRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleCreate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultId"];
+                };
+            };
+        };
+    };
+    getRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultRoleDetail"];
+                };
+            };
+        };
+    };
+    updateRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RoleUpdate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    deleteRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    getRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultLongArray"];
+                };
+            };
+        };
+    };
+    assignRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RolePermissionIds"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    getPermissionTree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultPermissionTree"];
+                };
+            };
+        };
+    };
+    getMenuTree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultMenuTree"];
+                };
+            };
+        };
+    };
+    createMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuCreate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultId"];
+                };
+            };
+        };
+    };
+    updateMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["MenuUpdate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    deleteMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    listAdminUsers: {
+        parameters: {
+            query: {
+                page: number;
+                pageSize: number;
+                keyword?: string;
+                status?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultAdminUserList"];
+                };
+            };
+        };
+    };
+    createAdminUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminUserCreate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultId"];
+                };
+            };
+        };
+    };
+    getAdminUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultAdminUserDetail"];
+                };
+            };
+        };
+    };
+    updateAdminUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AdminUserUpdate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    deleteAdminUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultVoid"];
+                };
+            };
+        };
+    };
+    getUserRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResultLongArray"];
+                };
+            };
+        };
+    };
+    assignUserRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserRoleIds"];
+            };
+        };
         responses: {
             /** @description 成功 */
             200: {

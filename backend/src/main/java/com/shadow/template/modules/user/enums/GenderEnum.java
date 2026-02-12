@@ -20,4 +20,16 @@ public enum GenderEnum {
     this.code = code;
     this.desc = desc;
   }
+
+  public static GenderEnum fromCode(Integer code) {
+    if (code == null) {
+      return null;
+    }
+    for (GenderEnum e : values()) {
+      if (e.code == code) {
+        return e;
+      }
+    }
+    return UNKNOWN;
+  }
 }

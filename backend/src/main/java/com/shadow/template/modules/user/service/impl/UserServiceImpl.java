@@ -39,6 +39,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserAuthEntity getUserById(Long id) {
+    return this.userAuthMapper.selectById(id);
+  }
+
+  @Override
+  public UserProfileEntity getProfileByUserId(Long userId) {
+    return this.userProfileMapper.selectById(userId);
+  }
+
+  @Override
   public void createUser(UserCreateCommand user) {
     if (isExistByEmail(user.getEmail())) {
       throw new BizException(ResultCode.USER_EMAIL_EXISTS);
@@ -62,6 +72,14 @@ public class UserServiceImpl implements UserService {
     UserAuthEntity userAuthEntity = new UserAuthEntity();
     userAuthEntity.setId(userId);
     userAuthEntity.setStatus(UserStatusEnum.DISABLED);
+    this.userAuthMapper.updateById(userAuthEntity);
+  }
+
+  @Override
+  public void updatePassword(Long userId, String newPasswordHash) {
+    UserAuthEntity userAuthEntity = new UserAuthEntity();
+    userAuthEntity.setId(userId);
+    userAuthEntity.setPasswordHash(newPasswordHash);
     this.userAuthMapper.updateById(userAuthEntity);
   }
 }

@@ -6,6 +6,11 @@ import org.springframework.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class RequestUtils {
+  public static String getClientType(HttpServletRequest request) {
+    String type = request.getHeader("X-Client-Type");
+    return type != null && !type.isBlank() ? type : "web";
+  }
+
   public static String getDeviceId(HttpServletRequest request) {
     // 约定从自定义 Header 获取，比如 "X-Device-Id"
     String deviceId = request.getHeader("X-Device-Id");

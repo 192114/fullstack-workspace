@@ -1,18 +1,14 @@
-import { useState } from "react";
+import { useAdminStore } from "@/store/admin-store";
 
 export function HomePage() {
-	const [count, setCount] = useState(0);
+	const { me } = useAdminStore();
 
 	return (
-		<div className="flex flex-col items-center justify-center p-8">
-			<h1 className="text-3xl font-bold text-gray-900 mb-4">React + Vite + Tailwind</h1>
-			<button
-				type="button"
-				className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-				onClick={() => setCount((c) => c + 1)}
-			>
-				Count: {count}
-			</button>
+		<div className="space-y-4">
+			<h1 className="text-2xl font-semibold">欢迎</h1>
+			<p className="text-muted-foreground">
+				{me?.user?.nickname ?? me?.user?.email ?? "用户"}，欢迎使用后台管理系统。
+			</p>
 		</div>
 	);
 }

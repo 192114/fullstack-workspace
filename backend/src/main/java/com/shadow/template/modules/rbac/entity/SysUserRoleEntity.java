@@ -1,0 +1,24 @@
+package com.shadow.template.modules.rbac.entity;
+
+import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import lombok.Data;
+
+@TableName("sys_user_role")
+@Data
+public class SysUserRoleEntity {
+  @TableId(type = IdType.AUTO)
+  private Long id;
+  @TableField(value = "user_id")
+  private Long userId;
+  @TableField(value = "role_id")
+  private Long roleId;
+  @TableField(fill = FieldFill.INSERT, value = "create_time")
+  private LocalDateTime createTime;
+}

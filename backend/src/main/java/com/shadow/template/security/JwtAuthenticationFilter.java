@@ -6,10 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -21,6 +24,7 @@ import com.shadow.template.common.exception.BizException;
 import com.shadow.template.common.result.ResultCode;
 import com.shadow.template.common.util.RequestUtils;
 import com.shadow.template.modules.auth.service.TokenBlacklistService;
+import com.shadow.template.modules.rbac.service.PermissionService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -34,6 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Autowired
   private TokenBlacklistService tokenBlacklistService;
+
+  @Autowired
+  private PermissionService permissionService;
 
   private final JwtTokenProvider tokenProvider;
 
@@ -58,8 +65,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           return;
         }
 
+        Long userId = Long.parseLong(subject);
+        List<SimpleGrantedAuthority> authorities = permissionService.getPermissionCodesByUserId(userId).stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null,
-            null);
+            authorities);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
       } catch (JwtException e) {

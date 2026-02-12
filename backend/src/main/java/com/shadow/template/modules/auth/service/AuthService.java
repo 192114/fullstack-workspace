@@ -1,10 +1,13 @@
 package com.shadow.template.modules.auth.service;
 
+import com.shadow.template.modules.auth.dto.ChangePasswordCommand;
 import com.shadow.template.modules.auth.dto.RefreshTokenRequestCommand;
+import com.shadow.template.modules.auth.dto.ResetPasswordDto;
 import com.shadow.template.modules.auth.dto.UserLoginCommand;
 import com.shadow.template.modules.auth.dto.UserLogoutCommand;
 import com.shadow.template.modules.auth.dto.UserRegisterDto;
 import com.shadow.template.modules.auth.dto.UserTokenResult;
+import com.shadow.template.modules.auth.vo.UserMeVo;
 
 public interface AuthService {
   UserTokenResult login(UserLoginCommand userLoginCommand);
@@ -14,4 +17,12 @@ public interface AuthService {
   UserTokenResult refreshToken(RefreshTokenRequestCommand refreshTokenRequestCommand);
 
   void logout(UserLogoutCommand userLogoutDto);
+
+  void changePassword(ChangePasswordCommand cmd);
+
+  void forgotPassword(String email);
+
+  void resetPassword(ResetPasswordDto dto);
+
+  UserMeVo getCurrentUser(Long userId);
 }

@@ -153,6 +153,498 @@ paths:
     post:
       summary: 用户登出
       operationId: logout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogoutRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /auth/change-password:
+    post:
+      summary: 修改密码
+      operationId: changePassword
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /auth/forgot-password:
+    post:
+      summary: 忘记密码-发送验证码
+      operationId: forgotPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /auth/reset-password:
+    post:
+      summary: 忘记密码-重置
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /auth/me:
+    get:
+      summary: 当前用户信息
+      operationId: getMe
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultUserMe"
+
+  /admin/me:
+    get:
+      summary: Admin 当前用户+菜单+权限
+      operationId: getAdminMe
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultAdminMe"
+
+  /admin/roles:
+    get:
+      summary: 角色列表
+      operationId: listRoles
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: pageSize
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: keyword
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultRoleList"
+    post:
+      summary: 创建角色
+      operationId: createRole
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleCreate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultId"
+
+  /admin/roles/{id}:
+    get:
+      summary: 角色详情
+      operationId: getRole
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultRoleDetail"
+    put:
+      summary: 更新角色
+      operationId: updateRole
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleUpdate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+    delete:
+      summary: 删除角色
+      operationId: deleteRole
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /admin/roles/{id}/permissions:
+    get:
+      summary: 角色权限列表
+      operationId: getRolePermissions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultLongArray"
+    put:
+      summary: 分配角色权限
+      operationId: assignRolePermissions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePermissionIds"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /admin/permissions:
+    get:
+      summary: 权限树
+      operationId: getPermissionTree
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultPermissionTree"
+
+  /admin/menus:
+    get:
+      summary: 菜单树（管理用）
+      operationId: getMenuTree
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultMenuTree"
+    post:
+      summary: 创建菜单
+      operationId: createMenu
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuCreate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultId"
+
+  /admin/menus/{id}:
+    put:
+      summary: 更新菜单
+      operationId: updateMenu
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuUpdate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+    delete:
+      summary: 删除菜单
+      operationId: deleteMenu
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /admin/users:
+    get:
+      summary: 用户列表
+      operationId: listAdminUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: pageSize
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultAdminUserList"
+    post:
+      summary: 创建用户
+      operationId: createAdminUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserCreate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultId"
+
+  /admin/users/{id}:
+    get:
+      summary: 用户详情
+      operationId: getAdminUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultAdminUserDetail"
+    put:
+      summary: 更新用户
+      operationId: updateAdminUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserUpdate"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+    delete:
+      summary: 删除用户
+      operationId: deleteAdminUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultVoid"
+
+  /admin/users/{id}/roles:
+    get:
+      summary: 用户角色列表
+      operationId: getUserRoles
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResultLongArray"
+    put:
+      summary: 分配用户角色
+      operationId: assignUserRoles
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRoleIds"
       responses:
         "200":
           description: 成功
@@ -162,6 +654,11 @@ paths:
                 $ref: "#/components/schemas/ApiResultVoid"
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     ApiResult:
       type: object
@@ -182,7 +679,8 @@ components:
         - $ref: "#/components/schemas/ApiResult"
         - properties:
             data:
-              type: "null"
+              type: object
+              nullable: true
 
     ApiResultUser:
       allOf:
@@ -254,8 +752,397 @@ components:
     TokenResponse:
       type: object
       properties:
-        token:
+        accessToken:
           type: string
+        refreshToken:
+          type: string
+
+    LogoutRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+        deviceId:
+          type: string
+
+    ChangePasswordRequest:
+      type: object
+      required:
+        - newPassword
+      properties:
+        oldPassword:
+          type: string
+        emailCode:
+          type: string
+        newPassword:
+          type: string
+
+    ForgotPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+
+    ResetPasswordRequest:
+      type: object
+      required:
+        - email
+        - emailCode
+        - newPassword
+      properties:
+        email:
+          type: string
+          format: email
+        emailCode:
+          type: string
+        newPassword:
+          type: string
+
+    UserMe:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+        gender:
+          type: integer
+        birthday:
+          type: string
+          format: date
+        bio:
+          type: string
+
+    AdminMe:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/AdminUserVo"
+        menus:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuTreeItem"
+        permissions:
+          type: array
+          items:
+            type: string
+
+    AdminUserVo:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+
+    MenuTreeItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        component:
+          type: string
+        icon:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuTreeItem"
+
+    RoleListResponse:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleListItem"
+        total:
+          type: integer
+
+    RoleListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        status:
+          type: integer
+        createTime:
+          type: string
+          format: date-time
+
+    RoleDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        status:
+          type: integer
+        createTime:
+          type: string
+          format: date-time
+        updateTime:
+          type: string
+          format: date-time
+
+    RoleCreate:
+      type: object
+      required:
+        - code
+        - name
+        - type
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        status:
+          type: integer
+
+    RoleUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: integer
+
+    RolePermissionIds:
+      type: object
+      required:
+        - permissionIds
+      properties:
+        permissionIds:
+          type: array
+          items:
+            type: integer
+
+    PermissionTreeItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+        type:
+          type: integer
+        parentId:
+          type: integer
+        sortOrder:
+          type: integer
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionTreeItem"
+
+    MenuManagementTreeItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        permissionId:
+          type: integer
+        parentId:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        component:
+          type: string
+        icon:
+          type: string
+        sortOrder:
+          type: integer
+        visible:
+          type: integer
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuManagementTreeItem"
+
+    MenuCreate:
+      type: object
+      required:
+        - permissionId
+        - parentId
+        - name
+      properties:
+        permissionId:
+          type: integer
+        parentId:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        component:
+          type: string
+        icon:
+          type: string
+        sortOrder:
+          type: integer
+        visible:
+          type: integer
+
+    MenuUpdate:
+      type: object
+      properties:
+        permissionId:
+          type: integer
+        parentId:
+          type: integer
+        name:
+          type: string
+        path:
+          type: string
+        component:
+          type: string
+        icon:
+          type: string
+        sortOrder:
+          type: integer
+        visible:
+          type: integer
+
+    AdminUserListResponse:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminUserListItem"
+        total:
+          type: integer
+
+    AdminUserListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+        status:
+          type: integer
+        createTime:
+          type: string
+          format: date-time
+
+    AdminUserDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+        gender:
+          type: integer
+        birthday:
+          type: string
+        bio:
+          type: string
+        status:
+          type: integer
+        createTime:
+          type: string
+          format: date-time
+        updateTime:
+          type: string
+          format: date-time
+
+    AdminUserCreate:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        nickname:
+          type: string
+        status:
+          type: integer
+
+    AdminUserUpdate:
+      type: object
+      properties:
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+        gender:
+          type: integer
+        birthday:
+          type: string
+        bio:
+          type: string
+        status:
+          type: integer
+
+    UserRoleIds:
+      type: object
+      required:
+        - roleIds
+      properties:
+        roleIds:
+          type: array
+          items:
+            type: integer
+
+    IdResponse:
+      type: object
+      properties:
+        id:
+          type: integer
 
     SendEmail:
       type: object
@@ -302,3 +1189,81 @@ components:
       properties:
         refreshToken:
           type: string
+        deviceId:
+          type: string
+
+    ApiResultUserMe:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/UserMe"
+
+    ApiResultAdminMe:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/AdminMe"
+
+    ApiResultRoleList:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/RoleListResponse"
+
+    ApiResultRoleDetail:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/RoleDetail"
+
+    ApiResultId:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/IdResponse"
+
+    ApiResultLongArray:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              type: array
+              items:
+                type: integer
+
+    ApiResultPermissionTree:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/PermissionTreeItem"
+
+    ApiResultMenuTree:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/MenuManagementTreeItem"
+
+    ApiResultAdminUserList:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/AdminUserListResponse"
+
+    ApiResultAdminUserDetail:
+      allOf:
+        - $ref: "#/components/schemas/ApiResult"
+        - properties:
+            data:
+              $ref: "#/components/schemas/AdminUserDetail"

@@ -7,7 +7,7 @@ export const httpClient = createHttpClient({
 	baseURL,
 	getAccessToken: () => tokenStore.getAccessToken(),
 	getRefreshToken: () => tokenStore.getRefreshToken(),
-	setTokens: (access, refresh) => tokenStore.setTokens(access, refresh),
+	setTokens: (access: string, refresh: string) => tokenStore.setTokens(access, refresh),
 	clearTokens: () => tokenStore.clearTokens(),
 	refreshEndpoint: "/api/auth/refresh",
 	onUnauthorized: () => {

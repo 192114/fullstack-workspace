@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.shadow.template.common.exception.BizException;
 import com.shadow.template.common.result.ResultCode;
 import com.shadow.template.config.AppProperties;
+import com.shadow.template.modules.auth.dto.ChangePasswordCommand;
 import com.shadow.template.modules.auth.dto.CreateSessionCommand;
 import com.shadow.template.modules.auth.dto.RefreshTokenRequestCommand;
+import com.shadow.template.modules.auth.dto.ResetPasswordDto;
 import com.shadow.template.modules.auth.dto.UserLoginCommand;
 import com.shadow.template.modules.auth.dto.UserLogoutCommand;
 import com.shadow.template.modules.auth.dto.UserRegisterDto;
@@ -22,8 +24,11 @@ import com.shadow.template.modules.auth.enums.LoginTypeEnum;
 import com.shadow.template.modules.auth.service.AuthService;
 import com.shadow.template.modules.auth.service.RefreshTokenService;
 import com.shadow.template.modules.auth.service.TokenBlacklistService;
+import com.shadow.template.modules.auth.service.EmailService;
+import com.shadow.template.modules.auth.vo.UserMeVo;
 import com.shadow.template.modules.user.dto.UserCreateCommand;
 import com.shadow.template.modules.user.entity.UserAuthEntity;
+import com.shadow.template.modules.user.entity.UserProfileEntity;
 import com.shadow.template.modules.user.enums.UserStatusEnum;
 import com.shadow.template.modules.user.service.UserService;
 import com.shadow.template.security.JwtTokenProvider;
@@ -52,6 +57,9 @@ public class AuthServiceImpl implements AuthService {
   @Autowired
   private JwtTokenProvider jwtTokenProvider;
 
+  @Autowired
+  private EmailService emailService;
+
   private UserTokenResult generateToken(Long userId, UserLoginCommand userLoginCommand) {
     // 如果再次登录 需撤销之前的登录
     refreshTokenService.revokeByUserId(userId, userLoginCommand.getDeviceId());
@@ -71,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
     createSessionDto.setIpAddress(userLoginCommand.getIpAddress());
     createSessionDto.setUseragent(userLoginCommand.getUseragent());
     createSessionDto.setDeviceId(userLoginCommand.getDeviceId());
+    createSessionDto.setClientType(userLoginCommand.getClientType());
     refreshTokenService.createSession(createSessionDto);
 
     final UserTokenResult userTokenDto = new UserTokenResult();
@@ -137,6 +146,75 @@ public class AuthServiceImpl implements AuthService {
     }
 
     throw new BizException(ResultCode.LOGIN_TYPE_ERROR);
+  }
+
+  @Override
+  public void changePassword(ChangePasswordCommand cmd) {
+    UserAuthEntity userAuth = userService.getUserById(cmd.getUserId());
+    if (userAuth == null) {
+      throw new BizException(ResultCode.NOT_FOUND);
+    }
+    if (userAuth.getStatus() == UserStatusEnum.DISABLED) {
+      throw new BizException(ResultCode.USER_DISABLED);
+    }
+    if (org.springframework.util.StringUtils.hasText(cmd.getOldPassword())) {
+      if (!passwordEncoder.matches(cmd.getOldPassword(), userAuth.getPasswordHash())) {
+        throw new BizException(ResultCode.PASSWORD_INCORRECT);
+      }
+    } else if (org.springframework.util.StringUtils.hasText(cmd.getEmailCode())) {
+      String code = stringRedisTemplate.opsForValue().get("code:email:RESET_PASSWORD:" + userAuth.getEmail());
+      if (code == null) {
+        throw new BizException(ResultCode.EMAIL_CODE_EXPIRED);
+      }
+      if (!MessageDigest.isEqual(code.getBytes(StandardCharsets.UTF_8),
+          cmd.getEmailCode().getBytes(StandardCharsets.UTF_8))) {
+        throw new BizException(ResultCode.EMAIL_CODE_INCORRECT);
+      }
+      stringRedisTemplate.delete("code:email:RESET_PASSWORD:" + userAuth.getEmail());
+    } else {
+      throw new BizException(ResultCode.PARAM_ERROR);
+    }
+    userService.updatePassword(cmd.getUserId(), passwordEncoder.encode(cmd.getNewPassword()));
+  }
+
+  @Override
+  public void forgotPassword(String email) {
+    emailService.sendEmail(email, com.shadow.template.modules.auth.enums.EmailUsageEnum.RESET_PASSWORD);
+  }
+
+  @Override
+  public void resetPassword(ResetPasswordDto dto) {
+    String code = stringRedisTemplate.opsForValue().get("code:email:RESET_PASSWORD:" + dto.getEmail());
+    if (code == null) {
+      throw new BizException(ResultCode.EMAIL_CODE_EXPIRED);
+    }
+    if (!code.equals(dto.getEmailCode())) {
+      throw new BizException(ResultCode.EMAIL_CODE_INCORRECT);
+    }
+    UserAuthEntity userAuth = userService.getUserByEmail(dto.getEmail());
+    if (userAuth == null) {
+      throw new BizException(ResultCode.NOT_FOUND);
+    }
+    stringRedisTemplate.delete("code:email:RESET_PASSWORD:" + dto.getEmail());
+    userService.updatePassword(userAuth.getId(), passwordEncoder.encode(dto.getNewPassword()));
+  }
+
+  @Override
+  public UserMeVo getCurrentUser(Long userId) {
+    UserAuthEntity auth = userService.getUserById(userId);
+    if (auth == null) {
+      throw new BizException(ResultCode.NOT_FOUND);
+    }
+    UserProfileEntity profile = userService.getProfileByUserId(userId);
+    UserMeVo vo = new UserMeVo();
+    vo.setId(auth.getId());
+    vo.setEmail(auth.getEmail());
+    vo.setNickname(profile != null ? profile.getNickname() : null);
+    vo.setAvatarUrl(profile != null ? profile.getAvatarUrl() : null);
+    vo.setGender(profile != null && profile.getGender() != null ? profile.getGender().getCode() : null);
+    vo.setBirthday(profile != null ? profile.getBirthday() : null);
+    vo.setBio(profile != null ? profile.getBio() : null);
+    return vo;
   }
 
   @Override
