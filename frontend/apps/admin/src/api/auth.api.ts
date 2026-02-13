@@ -1,7 +1,7 @@
 import { AuthContract } from "@repo/api-client";
 import { httpClient } from "../http-client";
 
-const ADMIN_HEADERS = { "X-Client-Type": "admin" } as const;
+const ADMIN_HEADERS = { "X-Client-Type": "web" } as const;
 
 export const authApi = {
 	sendEmail: (data: AuthContract.SendEmailRequest) =>

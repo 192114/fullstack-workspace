@@ -79,19 +79,21 @@ public class AuthController {
 
     final TokenResponseVo tokenResponseVo = new TokenResponseVo();
     tokenResponseVo.setAccessToken(userTokenDto.getToken());
-    tokenResponseVo.setRefreshToken(userTokenDto.getRefreshToken());
 
     String clientType = RequestUtils.getClientType(request);
-    if ("web".equalsIgnoreCase(clientType) || "admin".equalsIgnoreCase(clientType)) {
+    if ("web".equalsIgnoreCase(clientType)) {
       CookieUtils.setCookie(response, "refreshToken", userTokenDto.getRefreshToken(),
           appProperties.getRefresh().getExpireDays());
+    } else {
+      tokenResponseVo.setRefreshToken(userTokenDto.getRefreshToken());
     }
 
     return Result.success(tokenResponseVo);
   }
 
   @PostMapping("/refresh")
-  public Result<TokenResponseVo> refresh(@RequestBody(required = false) RefreshTokenDto body, HttpServletRequest request,
+  public Result<TokenResponseVo> refresh(@RequestBody(required = false) RefreshTokenDto body,
+      HttpServletRequest request,
       HttpServletResponse response) {
     String refreshToken = body != null && org.springframework.util.StringUtils.hasText(body.getRefreshToken())
         ? body.getRefreshToken()
@@ -99,7 +101,8 @@ public class AuthController {
     if (!org.springframework.util.StringUtils.hasText(refreshToken)) {
       throw new BizException(ResultCode.TOKEN_INVALID);
     }
-    String deviceId = body != null && body.getDeviceId() != null ? body.getDeviceId() : RequestUtils.getDeviceId(request);
+    String deviceId = body != null && body.getDeviceId() != null ? body.getDeviceId()
+        : RequestUtils.getDeviceId(request);
 
     final RefreshTokenRequestCommand refreshTokenRequestCommand = new RefreshTokenRequestCommand();
     refreshTokenRequestCommand.setRefreshToken(refreshToken);
@@ -111,12 +114,13 @@ public class AuthController {
 
     final TokenResponseVo tokenResponseVo = new TokenResponseVo();
     tokenResponseVo.setAccessToken(userTokenDto.getToken());
-    tokenResponseVo.setRefreshToken(userTokenDto.getRefreshToken());
 
     String clientType = RequestUtils.getClientType(request);
-    if ("web".equalsIgnoreCase(clientType) || "admin".equalsIgnoreCase(clientType)) {
+    if ("web".equalsIgnoreCase(clientType)) {
       CookieUtils.setCookie(response, "refreshToken", userTokenDto.getRefreshToken(),
           appProperties.getRefresh().getExpireDays());
+    } else {
+      tokenResponseVo.setRefreshToken(userTokenDto.getRefreshToken());
     }
 
     return Result.success(tokenResponseVo);
@@ -128,7 +132,8 @@ public class AuthController {
     String refreshToken = body != null && org.springframework.util.StringUtils.hasText(body.getRefreshToken())
         ? body.getRefreshToken()
         : CookieUtils.getCookie(request, "refreshToken");
-    String deviceId = body != null && body.getDeviceId() != null ? body.getDeviceId() : RequestUtils.getDeviceId(request);
+    String deviceId = body != null && body.getDeviceId() != null ? body.getDeviceId()
+        : RequestUtils.getDeviceId(request);
 
     final UserLogoutCommand userLogoutDto = new UserLogoutCommand();
     userLogoutDto.setRefreshToken(refreshToken);
@@ -136,7 +141,10 @@ public class AuthController {
     userLogoutDto.setToken(RequestUtils.getToken(request));
 
     authService.logout(userLogoutDto);
-    CookieUtils.deleteCookie(response, "refreshToken");
+    String clientType = RequestUtils.getClientType(request);
+    if ("web".equalsIgnoreCase(clientType)) {
+      CookieUtils.deleteCookie(response, "refreshToken");
+    }
     return Result.success();
   }
 

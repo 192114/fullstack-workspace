@@ -24,6 +24,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   private UserSessionMapper userSessionMapper;
 
   private UserSessionEntity getUserSessionEntityByRefreshToken(String refreshToken, String deviceId) {
+    if (!org.springframework.util.StringUtils.hasText(refreshToken)) {
+      throw new BizException(ResultCode.TOKEN_INVALID);
+    }
     final String refreshTokenHash = DigestUtils.sha256Hex(refreshToken);
     LambdaQueryWrapper<UserSessionEntity> qw = Wrappers.lambdaQuery();
     qw.eq(UserSessionEntity::getTokenHash, refreshTokenHash);
@@ -68,7 +71,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public String rotateRefreshToken(RefreshTokenRequestCommand refreshTokenRequestCommand) {
-    final UserSessionEntity userSessionEntity = getUserSessionEntityByRefreshToken(refreshTokenRequestCommand.getRefreshToken(), refreshTokenRequestCommand.getDeviceId());
+    final UserSessionEntity userSessionEntity = getUserSessionEntityByRefreshToken(
+        refreshTokenRequestCommand.getRefreshToken(), refreshTokenRequestCommand.getDeviceId());
 
     final LocalDateTime expireTime = userSessionEntity.getExpireTime();
     final Long parentId = userSessionEntity.getId();
